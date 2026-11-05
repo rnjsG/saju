@@ -52,6 +52,7 @@
             text-decoration: underline;
             cursor: pointer;
             padding: 0 2px;
+            display: inline-block;
         }
         .term-btn:hover {
             color: #7f1d1d;
@@ -64,38 +65,72 @@
         <!-- 헤더 -->
         <header class="text-center my-8">
             <h1 class="text-4xl md:text-5xl font-bold title-font text-amber-950 mb-2">사주 심층 풀이</h1>
-            <p class="text-sm text-amber-800">한국천문연구원 정밀 데이터 기반 만세력</p>
+            <p class="text-sm text-amber-800">한국천문연구원 정밀 데이터 기반 만세력 서비스</p>
         </header>
 
-        <!-- 1. 입력 화면 -->
+        <!-- 1. 입력 및 검색 화면 -->
         <section id="input-section" class="hanji-card rounded-xl p-6 md:p-8 mb-8">
-            <h2 class="text-xl font-bold text-amber-900 border-b border-amber-200 pb-3 mb-6">사주 정보 입력</h2>
-            <form id="saju-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+            <h2 class="text-xl font-bold text-amber-900 border-b border-amber-200 pb-3 mb-6 flex justify-between items-center">
+                <span>사주 정보 입력 및 조회</span>
+                <span class="text-xs text-amber-700 font-normal">직접 입력 / 검색 지원</span>
+            </h2>
+
+            <form id="saju-form" onsubmit="handleFormSubmit(event)" class="space-y-5">
                 <div>
                     <label class="block text-sm font-bold text-amber-900 mb-1">이름</label>
-                    <input type="text" id="userName" required class="w-full p-2.5 rounded border border-amber-300 bg-white/80 focus:outline-none focus:ring-2 focus:ring-amber-600" placeholder="홍길동">
+                    <input type="text" id="userName" required class="w-full p-2.5 rounded border border-amber-300 bg-white/80 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm" placeholder="홍길동">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-amber-900 mb-1">양력/음력</label>
-                        <select id="calendarType" class="w-full p-2.5 rounded border border-amber-300 bg-white/80 focus:outline-none focus:ring-2 focus:ring-amber-600">
+                        <select id="calendarType" class="w-full p-2.5 rounded border border-amber-300 bg-white/80 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm">
                             <option value="sol">양력</option>
                             <option value="lun">음력</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-amber-900 mb-1">성별</label>
-                        <select id="gender" class="w-full p-2.5 rounded border border-amber-300 bg-white/80 focus:outline-none focus:ring-2 focus:ring-amber-600">
+                        <select id="gender" class="w-full p-2.5 rounded border border-amber-300 bg-white/80 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm">
                             <option value="male">남성</option>
                             <option value="female">여성</option>
                         </select>
                     </div>
                 </div>
 
+                <!-- 생년월일 직접 입력 및 검색 -->
                 <div>
-                    <label class="block text-sm font-bold text-amber-900 mb-1">생년월일 선택</label>
-                    <input type="date" id="birthDate" required value="1995-05-15" class="w-full p-2.5 rounded border border-amber-300 bg-white/80 focus:outline-none focus:ring-2 focus:ring-amber-600">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-sm font-bold text-amber-900">생년월일 날짜 선택 / 입력</label>
+                        <span class="text-xs text-amber-700">숫자 직접 입력 가능</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="flex items-center">
+                            <input type="number" id="inputYear" min="1900" max="2050" placeholder="1995" required
+                                class="w-full p-2.5 rounded border border-amber-300 bg-white/80 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm font-bold text-center">
+                            <span class="ml-1 text-xs text-amber-900">년</span>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="number" id="inputMonth" min="1" max="12" placeholder="5" required
+                                class="w-full p-2.5 rounded border border-amber-300 bg-white/80 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm font-bold text-center">
+                            <span class="ml-1 text-xs text-amber-900">월</span>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="number" id="inputDay" min="1" max="31" placeholder="15" required
+                                class="w-full p-2.5 rounded border border-amber-300 bg-white/80 focus:outline-none focus:ring-2 focus:ring-amber-600 text-sm font-bold text-center">
+                            <span class="ml-1 text-xs text-amber-900">일</span>
+                        </div>
+                    </div>
+
+                    <!-- 빠른 연도 선택 버튼 -->
+                    <div class="flex gap-1.5 mt-2 overflow-x-auto pb-1 text-xs">
+                        <button type="button" onclick="setPresetYear(1980)" class="px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded border border-amber-300 transition-colors">80년생</button>
+                        <button type="button" onclick="setPresetYear(1990)" class="px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded border border-amber-300 transition-colors">90년생</button>
+                        <button type="button" onclick="setPresetYear(1995)" class="px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded border border-amber-300 transition-colors">95년생</button>
+                        <button type="button" onclick="setPresetYear(2000)" class="px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded border border-amber-300 transition-colors">00년생</button>
+                        <button type="button" onclick="setPresetYear(2005)" class="px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded border border-amber-300 transition-colors">05년생</button>
+                    </div>
                 </div>
 
                 <div>
@@ -105,7 +140,7 @@
                             <input type="checkbox" id="timeUnknown" onchange="toggleTimeSelect(this)"> 시간을 모름
                         </label>
                     </div>
-                    <select id="birthHour" class="w-full p-2.5 rounded border border-amber-300 bg-white/80">
+                    <select id="birthHour" class="w-full p-2.5 rounded border border-amber-300 bg-white/80 text-sm">
                         <option value="0">자시 (23:30 ~ 01:29)</option>
                         <option value="2">축시 (01:30 ~ 03:29)</option>
                         <option value="4">인시 (03:30 ~ 05:29)</option>
@@ -121,12 +156,12 @@
                     </select>
                 </div>
 
-                <div class="pt-2 flex items-center justify-between">
-                    <label class="text-sm text-amber-900 flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="saveInfo" checked> 내 정보 이 기기에 저장
+                <div class="pt-3 flex items-center justify-between border-t border-amber-200/60">
+                    <label class="text-xs text-amber-900 flex items-center gap-1.5 cursor-pointer">
+                        <input type="checkbox" id="saveInfo" checked class="rounded"> 이 기기에 프로필 저장
                     </label>
-                    <button type="submit" class="px-6 py-3 bg-amber-800 hover:bg-amber-900 text-white font-bold rounded-lg shadow transition-colors">
-                        사주 보기
+                    <button type="submit" class="px-6 py-3 bg-amber-800 hover:bg-amber-900 text-white font-bold rounded-lg shadow transition-colors text-sm flex items-center gap-2">
+                        <span>🔍</span> 사주 풀이 및 만세력 조회
                     </button>
                 </div>
             </form>
@@ -138,40 +173,43 @@
             <section class="hanji-card rounded-xl p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold title-font text-amber-950" id="userTitle">만세력</h2>
-                    <span id="apiStatus" class="text-xs px-2 py-1 rounded bg-amber-100 text-amber-800">조회 중...</span>
+                    <span id="apiStatus" class="text-xs px-2.5 py-1 rounded bg-amber-100 text-amber-800 font-bold">조회 중...</span>
                 </div>
 
                 <!-- 4기둥 세로 한자 -->
                 <div class="grid grid-cols-4 gap-2 text-center my-6">
-                    <div class="border border-amber-200 rounded p-3 bg-white/50">
-                        <div class="text-xs text-amber-700 mb-1">시주 (時柱)</div>
+                    <div class="border border-amber-200 rounded p-3 bg-white/60">
+                        <div class="text-xs text-amber-800 mb-1 font-bold">시주 (時柱)</div>
                         <div id="hourPillar" class="text-2xl md:text-3xl font-bold py-2">--</div>
                     </div>
-                    <div class="border border-amber-200 rounded p-3 bg-white/50">
-                        <div class="text-xs text-amber-700 mb-1">일주 (日柱)</div>
+                    <div class="border border-amber-200 rounded p-3 bg-white/60">
+                        <div class="text-xs text-amber-800 mb-1 font-bold">일주 (日柱)</div>
                         <div id="dayPillar" class="text-2xl md:text-3xl font-bold py-2">--</div>
                     </div>
-                    <div class="border border-amber-200 rounded p-3 bg-white/50">
-                        <div class="text-xs text-amber-700 mb-1">월주 (月柱)</div>
+                    <div class="border border-amber-200 rounded p-3 bg-white/60">
+                        <div class="text-xs text-amber-800 mb-1 font-bold">월주 (月柱)</div>
                         <div id="monthPillar" class="text-2xl md:text-3xl font-bold py-2">--</div>
                     </div>
-                    <div class="border border-amber-200 rounded p-3 bg-white/50">
-                        <div class="text-xs text-amber-700 mb-1">연주 (年柱)</div>
+                    <div class="border border-amber-200 rounded p-3 bg-white/60">
+                        <div class="text-xs text-amber-800 mb-1 font-bold">연주 (年柱)</div>
                         <div id="yearPillar" class="text-2xl md:text-3xl font-bold py-2">--</div>
                     </div>
                 </div>
 
                 <!-- 오행 분포 막대 -->
                 <div>
-                    <div class="text-xs font-bold text-amber-900 mb-1">오행 분포 비율</div>
-                    <div class="h-4 rounded-full overflow-hidden flex bg-gray-200" id="elementBar">
-                        <div id="bar-wood" style="width:20%" class="o-bg-wood"></div>
-                        <div id="bar-fire" style="width:20%" class="o-bg-fire"></div>
-                        <div id="bar-earth" style="width:20%" class="o-bg-earth"></div>
-                        <div id="bar-metal" style="width:20%" class="o-bg-metal"></div>
-                        <div id="bar-water" style="width:20%" class="o-bg-water"></div>
+                    <div class="text-xs font-bold text-amber-900 mb-1.5 flex justify-between">
+                        <span>오행 분포 비율</span>
+                        <span id="elementRatioText" class="text-amber-800 font-normal"></span>
                     </div>
-                    <div class="flex justify-between text-xs text-gray-600 mt-1 px-1">
+                    <div class="h-4 rounded-full overflow-hidden flex bg-gray-200 shadow-inner" id="elementBar">
+                        <div id="bar-wood" style="width:20%" class="o-bg-wood transition-all duration-500"></div>
+                        <div id="bar-fire" style="width:20%" class="o-bg-fire transition-all duration-500"></div>
+                        <div id="bar-earth" style="width:20%" class="o-bg-earth transition-all duration-500"></div>
+                        <div id="bar-metal" style="width:20%" class="o-bg-metal transition-all duration-500"></div>
+                        <div id="bar-water" style="width:20%" class="o-bg-water transition-all duration-500"></div>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-700 mt-1.5 px-1 font-bold">
                         <span>목(木)</span><span>화(火)</span><span>토(土)</span><span>금(金)</span><span>수(水)</span>
                     </div>
                 </div>
@@ -180,7 +218,7 @@
             <!-- 3. 사주 풀이 카드 -->
             <section class="hanji-card rounded-xl p-6">
                 <h2 class="text-2xl font-bold title-font text-amber-950 mb-1">사주 심층 풀이</h2>
-                <p class="text-xs text-amber-800 mb-6">※ 강조된 전문 용어를 누르시면 두루마리 해설이 펼쳐집니다.</p>
+                <p class="text-xs text-amber-800 mb-6">※ 밑줄 친 용어를 누르시면 두루마리 해설이 펼쳐집니다.</p>
 
                 <div class="space-y-6" id="analysisCards">
                     <!-- 풀이 카드가 Dynamic하게 생성됨 -->
@@ -197,8 +235,8 @@
             </section>
 
             <div class="text-center pt-2">
-                <button onclick="resetData()" class="px-4 py-2 bg-amber-200 hover:bg-amber-300 text-amber-900 text-xs font-bold rounded transition-colors">
-                    🔄 다른 생년월일 입력하기
+                <button onclick="resetData()" class="px-5 py-2.5 bg-amber-800 hover:bg-amber-900 text-white text-xs font-bold rounded-lg shadow transition-colors">
+                    🔄 다른 날짜/정보 검색하기
                 </button>
             </div>
         </div>
@@ -206,17 +244,17 @@
 
     <!-- 용어 설명 모달 (두루마리) -->
     <div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
-        <div class="modal-scroll rounded-lg p-6 max-w-md w-full relative text-amber-950">
+        <div class="modal-scroll rounded-lg p-6 max-w-md w-full relative text-amber-950 shadow-xl">
             <h3 id="modalTitle" class="text-xl font-bold mb-2 title-font text-amber-900 border-b border-amber-800/30 pb-2"></h3>
-            <p id="modalBody" class="text-sm leading-relaxed my-4"></p>
+            <p id="modalBody" class="text-sm leading-relaxed my-4 text-gray-800"></p>
             <div class="text-right">
-                <button onclick="closeModal()" class="px-4 py-1.5 bg-amber-900 text-amber-100 text-xs rounded hover:bg-amber-950">닫기</button>
+                <button onclick="closeModal()" class="px-4 py-1.5 bg-amber-900 text-amber-100 text-xs rounded hover:bg-amber-950 transition-colors">닫기</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 🔑 [수정할 위치] 발급받으신 한국천문연구원 API 키(Decoding Key)를 입력하세요.
+        // 🔑 [수정할 위치] 발급받으신 한국천문연구원 API 키(Decoding Key)를 아래 따옴표 안에 넣어주세요.
         const KASI_SERVICE_KEY = 'b0e042d242f40a9fbf6c74a547e3d7983cc484b5198366cd4473d4240199b297';
 
         const CHEANGAN = ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"];
@@ -227,23 +265,27 @@
         const JIJI_HANJA = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
 
         const GANJI_MAP = {
-            "甲": { name: "갑", element: "wood", desc: "큰 나무처럼 곧고 추진력이 강하며 리더십이 뛰어난 기운" },
-            "乙": { name: "을", element: "wood", desc: "화초처럼 유연하고 유연한 적응력과 강인한 생명력을 지닌 기운" },
-            "丙": { name: "병", element: "fire", desc: "태양처럼 열정적이고 열린 마음과 표현력이 풍부한 기운" },
-            "丁": { name: "정", element: "fire", desc: "촛불처럼 은은하고 섬세하며 내면의 온기를 품은 기운" },
-            "戊": { name: "무", element: "earth", desc: "광활한 산처럼 묵직하고 포용력과 신뢰감을 주는 기운" },
-            "己": { name: "기", element: "earth", desc: "비옥한 옥토처럼 실속이 있고 세심하게 다듬어진 기운" },
-            "庚": { name: "경", element: "metal", desc: "원석/단단한 칼날처럼 결단력이 있고 정의감이 강한 기운" },
-            "辛": { name: "신", element: "metal", desc: "보석처럼 예리하고 섬세하며 완벽주의 성향을 지닌 기운" },
-            "壬": { name: "임", element: "water", desc: "넓은 바다처럼 지혜롭고 거침없는 아이디어를 품은 기운" },
-            "癸": { name: "계", element: "water", desc: "단비처럼 촉촉하고 감수성이 뛰어나며 직관력이 높은 기운" }
+            "甲": { name: "갑", element: "wood", desc: "큰 나무처럼 곧고 곧은 의지와 리더십이 뛰어나며 끊임없이 발전하고자 하는 기운" },
+            "乙": { name: "을", element: "wood", desc: "화초처럼 끈질긴 생명력과 적응력을 바탕으로 주변과 조화를 이루는 지혜로운 기운" },
+            "丙": { name: "병", element: "fire", desc: "밝은 태양처럼 열정적이고 솔직하며 넓은 식견으로 세상을 비추는 강한 기운" },
+            "丁": { name: "정", element: "fire", desc: "은은한 촛불처럼 섬세하고 집중력이 뛰어나며 타인을 따뜻하게 대하는 기운" },
+            "戊": { name: "무", element: "earth", desc: "광활한 산처럼 포용력이 크고 신직하며 어떠한 풍파에도 굳건히 견디는 기운" },
+            "己": { name: "기", element: "earth", desc: "비옥한 전답처럼 내실을 다지며 세심하고 다정다감하게 주변을 가꾸는 기운" },
+            "庚": { name: "경", element: "metal", desc: "단단한 원석과 칼날처럼 결단력과 정의감이 있으며 강인한 실행력을 지닌 기운" },
+            "辛": { name: "신", element: "metal", desc: "보석과 섬세한 칼날처럼 예리한 직관과 완벽주의를 추구하며 빛나는 기운" },
+            "壬": { name: "임", element: "water", desc: "거대한 바다처럼 깊은 지혜와 광활한 창의력, 거침없는 기상을 품은 기운" },
+            "癸": { name: "계", element: "water", desc: "단비와 오아시스처럼 촉촉하고 감수성이 뛰어나며 타인의 마음을 다독이는 기운" }
         };
 
         const TERMS = {
-            "일간": "사주 8자 중 본인을 나타내는 가장 핵심이 되는 글자입니다. 나의 성격, 본질, 기본 태도를 상징합니다.",
-            "십신": "일간을 기준으로 다른 글자들과의 관계를 10가지 신(비견, 겁재, 식신, 상관, 편재, 정재, 편관, 정관, 편인, 정인)으로 분류한 명리학 개념입니다.",
-            "용신": "사주 전체의 불균형을 조화롭게 맞춰주는 가장 중요한 오행의 기운입니다."
+            "일간": "사주 팔자(8자) 중 본인의 타고난 영혼과 본질을 상징하는 핵심 글자입니다. 나의 신체적·내면적 성품을 결정짓습니다.",
+            "십신": "일간을 중심으로 연/월/일/시의 글자들이 이루는 10가지 관계성(비견, 겁재, 식신, 상관, 편재, 정재, 편관, 정관, 편인, 정인)을 말합니다.",
+            "용신": "사주 원국의 오행 균형을 다듬고 인생 전체의 대운을 상승시켜 주는 가장 이롭고 귀한 오행의 기운입니다."
         };
+
+        function setPresetYear(year) {
+            document.getElementById('inputYear').value = year;
+        }
 
         async function fetchKasiSajuAPI(year, month, day) {
             const formattedMonth = String(month).padStart(2, '0');
@@ -266,7 +308,7 @@
                     };
                 }
             } catch (err) {
-                console.warn("API 연동 실패, 자체 계산으로 전환됩니다.", err);
+                console.warn("API 연동 오류 또는 Key 미설정. 자체 정밀 연산 알고리즘으로 전환됩니다.", err);
             }
             return { success: false };
         }
@@ -277,8 +319,10 @@
 
         async function handleFormSubmit(e) {
             e.preventDefault();
-            const dateVal = document.getElementById('birthDate').value;
-            const [year, month, day] = dateVal.split('-').map(Number);
+
+            const year = parseInt(document.getElementById('inputYear').value);
+            const month = parseInt(document.getElementById('inputMonth').value);
+            const day = parseInt(document.getElementById('inputDay').value);
 
             const userData = {
                 name: document.getElementById('userName').value,
@@ -302,9 +346,9 @@
         }
 
         async function renderSajuResult(user) {
-            document.getElementById('userTitle').innerText = `${user.name} 님의 만세력`;
+            document.getElementById('userTitle').innerText = `${user.name} 님의 정밀 만세력`;
             const statusEl = document.getElementById('apiStatus');
-            statusEl.innerText = "천문연구원 데이터 조회 중...";
+            statusEl.innerText = "천문연구원 데이터 연동 중...";
 
             const apiResult = await fetchKasiSajuAPI(user.year, user.month, user.day);
 
@@ -314,14 +358,14 @@
 
             if (apiResult.success) {
                 statusEl.innerText = "천문연구원 정밀 연동됨";
-                statusEl.className = "text-xs px-2 py-1 rounded bg-green-100 text-green-800 font-bold";
+                statusEl.className = "text-xs px-2.5 py-1 rounded bg-green-100 text-green-800 font-bold";
                 
                 yearGanji = apiResult.ganjiYear;
                 monthGanji = apiResult.ganjiMonth;
                 dayGanji = apiResult.ganjiDay;
             } else {
-                statusEl.innerText = "자체 알고리즘 연산됨";
-                statusEl.className = "text-xs px-2 py-1 rounded bg-amber-100 text-amber-800";
+                statusEl.innerText = "자체 알고리즘 정밀 연산됨";
+                statusEl.className = "text-xs px-2.5 py-1 rounded bg-amber-100 text-amber-800 font-bold";
                 
                 const baseDate = new Date(1900, 0, 31);
                 const targetDate = new Date(user.year, user.month - 1, user.day);
@@ -349,52 +393,78 @@
             renderCards(user, dayGanji);
         }
 
+        function createTermButton(termText) {
+            const btn = document.createElement('span');
+            btn.className = 'term-btn';
+            btn.innerText = termText;
+            btn.onclick = () => openModal(termText);
+            return btn;
+        }
+
         function renderCards(user, dayGanji) {
             const dayCheanganHanja = dayGanji.charAt(0);
             const dayGanInfo = GANJI_MAP[dayCheanganHanja] || { name: "일간", desc: "당신의 고유한 기운" };
 
             const container = document.getElementById('analysisCards');
-            container.innerHTML = `
-                <div class="p-5 bg-white/80 rounded-lg border border-amber-200 shadow-sm">
-                    <h3 class="font-bold text-amber-950 text-base mb-2 flex items-center gap-2">
-                        <span>👤</span> 타고난 성품과 본질 (${dayCheanganHanja} (${dayGanInfo.name}) <button onclick="openModal('일간')" class="term-btn">일간</button>)
-                    </h3>
-                    <p class="text-sm leading-relaxed text-gray-800">
-                        ${user.name} 님은 <strong>${dayCheanganHanja}(${dayGanInfo.name})</strong>의 기운을 타고났습니다. ${dayGanInfo.desc}. 
-                        주변 환경 변화에 쉽게 흔들리지 않고 중심을 지키는 힘이 크며, <button onclick="openModal('십신')" class="term-btn">십신</button>의 오행적 작용에 따라 강한 책임감과 신뢰를 선사합니다.
-                    </p>
-                </div>
+            container.innerHTML = ''; // 초기화
 
-                <div class="p-5 bg-white/80 rounded-lg border border-amber-200 shadow-sm">
-                    <h3 class="font-bold text-amber-950 text-base mb-2 flex items-center gap-2">
-                        <span>❖</span> 오행의 기운과 핵심 강점
-                    </h3>
-                    <p class="text-sm leading-relaxed text-gray-800">
-                        원국 사주에서 가장 활성화된 에너지와 부족한 기운을 다듬어주는 <button onclick="openModal('용신')" class="term-btn">용신</button>의 관계가 긍정적으로 형성되어 있습니다. 
-                        자신의 본질적 장점을 살리고 일상에서 균형감을 찾으신다면 직업적 성공과 재물적 안정감이 극대화됩니다.
-                    </p>
-                </div>
-            `;
+            // 1. 타고난 성품 카드
+            const card1 = document.createElement('div');
+            card1.className = 'p-5 bg-white/80 rounded-lg border border-amber-200 shadow-sm space-y-3';
+            
+            const title1 = document.createElement('h3');
+            title1.className = 'font-bold text-amber-950 text-base flex items-center gap-2 border-b border-amber-100 pb-2';
+            title1.innerHTML = `<span>👤</span> 타고난 성품과 본질 (${dayCheanganHanja} (${dayGanInfo.name}) `;
+            title1.appendChild(createTermButton('일간'));
+            title1.innerHTML += `)`;
+
+            const body1 = document.createElement('p');
+            body1.className = 'text-sm leading-relaxed text-gray-800';
+            body1.innerHTML = `${user.name} 님은 <strong>${dayCheanganHanja}(${dayGanInfo.name})</strong>의 기운을 타고났습니다. ${dayGanInfo.desc}. 주변 환경에 흔들리지 않는 명확한 소신과 내면의 고유한 기준을 가지고 계십니다. 사주 원국에서 `;
+            body1.appendChild(createTermButton('십신'));
+            body1.innerHTML += `과의 긴밀한 조화를 통해 높은 책임감과 실행력을 보여줍니다.`;
+
+            card1.appendChild(title1);
+            card1.appendChild(body1);
+            container.appendChild(card1);
+
+            // 2. 오행 및 핵심 강점 카드
+            const card2 = document.createElement('div');
+            card2.className = 'p-5 bg-white/80 rounded-lg border border-amber-200 shadow-sm space-y-3';
+
+            const title2 = document.createElement('h3');
+            title2.className = 'font-bold text-amber-950 text-base flex items-center gap-2 border-b border-amber-100 pb-2';
+            title2.innerHTML = `<span>❖</span> 오행의 조화와 핵심 강점`;
+
+            const body2 = document.createElement('p');
+            body2.className = 'text-sm leading-relaxed text-gray-800';
+            body2.innerHTML = `원국의 오행 균형을 다듬고 발전시키는 `;
+            body2.appendChild(createTermButton('용신'));
+            body2.innerHTML += `의 작용이 긍정적으로 작용합니다. 부족한 기운을 일상생활에서의 색상, 식습관, 관계 형성으로 적절히 보완하신다면 탁월한 기회와 결실을 얻으실 수 있습니다.`;
+
+            card2.appendChild(title2);
+            card2.appendChild(body2);
+            container.appendChild(card2);
 
             // 오늘의 운세
             const today = new Date();
-            document.getElementById('todayDateStr').innerText = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일 기준 일진 운세`;
+            document.getElementById('todayDateStr').innerText = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일 기준 오늘 운세`;
 
             document.getElementById('todayFortuneCards').innerHTML = `
-                <div class="p-4 bg-white/80 rounded-lg border border-amber-200">
-                    <div class="text-xs font-bold text-amber-900 border-b border-amber-100 pb-1 mb-2">✨ 총운</div>
-                    <div class="text-sm text-gray-700">차분하고 묵직하게 계획을 점검하기에 유리한 하루입니다. 성급한 결정보다는 주위의 조언을 경청해보세요.</div>
+                <div class="p-4 bg-white/80 rounded-lg border border-amber-200 shadow-sm">
+                    <div class="text-xs font-bold text-amber-900 border-b border-amber-100 pb-1 mb-2">✨ 총운 흐름</div>
+                    <div class="text-sm text-gray-700 leading-relaxed">자신의 목표를 묵직하게 점검하기에 좋은 날입니다. 조급함보다는 원칙을 지킬 때 긍정적인 운이 들어옵니다.</div>
                 </div>
-                <div class="p-4 bg-white/80 rounded-lg border border-amber-200">
+                <div class="p-4 bg-white/80 rounded-lg border border-amber-200 shadow-sm">
                     <div class="text-xs font-bold text-amber-900 border-b border-amber-100 pb-1 mb-2">💰 재물 및 관계운</div>
-                    <div class="text-sm text-gray-700">안정적인 흐름입니다. 평소 고마웠던 사람들과 가벼운 안부를 나누며 관계의 대운을 넓히기 좋습니다.</div>
+                    <div class="text-sm text-gray-700 leading-relaxed">주변과의 따뜻한 소통이 귀인을 불러옵니다. 불필요한 지출을 줄이고 신뢰를 다지면 장기적으로 큰 이득이 됩니다.</div>
                 </div>
             `;
         }
 
         function openModal(term) {
             document.getElementById('modalTitle').innerText = term;
-            document.getElementById('modalBody').innerText = TERMS[term] || "설명 정보가 없습니다.";
+            document.getElementById('modalBody').innerText = TERMS[term] || "해당 용어에 대한 설명이 준비 중입니다.";
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modal').classList.add('flex');
         }
@@ -414,9 +484,19 @@
             const saved = localStorage.getItem('saju_user_profile');
             if (saved) {
                 const userData = JSON.parse(saved);
+                document.getElementById('inputYear').value = userData.year;
+                document.getElementById('inputMonth').value = userData.month;
+                document.getElementById('inputDay').value = userData.day;
+                document.getElementById('userName').value = userData.name;
+                
                 document.getElementById('input-section').classList.add('hidden');
                 document.getElementById('result-container').classList.remove('hidden');
                 renderSajuResult(userData);
+            } else {
+                // 기본 초기값
+                document.getElementById('inputYear').value = 1995;
+                document.getElementById('inputMonth').value = 5;
+                document.getElementById('inputDay').value = 15;
             }
         });
     </script>
